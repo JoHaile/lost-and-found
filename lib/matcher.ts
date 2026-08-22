@@ -25,10 +25,20 @@ type ScorePart = { points: number; reason?: string };
 
 function calculateCategoryScore(lost: Item, found: Item): ScorePart {
   if (!lost.category || !found.category) return { points: 0 };
-  if (lost.category.trim().toLowerCase() !== found.category.trim().toLowerCase()) {
-    return { points: 0 };
+
+  if (lost.category.trim().toLowerCase() === found.category.trim().toLowerCase()) {
+    return { points: WEIGHTS.category, reason: "Same category" };
   }
-  return { points: WEIGHTS.category, reason: "Same category" };
+
+  const similarity = Math.max(
+    textSimilarity(lost.category, found.category),
+    tokenOverlap(lost.category, found.category),
+  );
+  if (similarity < 0.6) return { points: 0 };
+  return {
+    points: Math.round(WEIGHTS.category * similarity),
+    reason: "Similar category",
+  };
 }
 
 function calculateNameScore(lost: Item, found: Item): ScorePart {
@@ -133,14 +143,6 @@ export async function findAndSaveMatches(item: Item): Promise<number> {
       reportType: oppositeType,
       status: "PENDING",
       dateAndTime: { gte: windowStart, lte: windowEnd },
-      ...(item.category
-        ? {
-            OR: [
-              { category: null },
-              { category: { equals: item.category, mode: "insensitive" } },
-            ],
-          }
-        : {}),
     },
   });
 

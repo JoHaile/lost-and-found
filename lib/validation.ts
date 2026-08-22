@@ -7,7 +7,6 @@ export const CATEGORIES = [
   "Keys",
   "Clothing",
   "Bags",
-  "Other",
 ] as const;
 
 const optionalText = (maxLength: number) =>

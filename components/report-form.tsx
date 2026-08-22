@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { DatetimePicker } from "@/components/datetime-picker";
 import { createReport, type ReportFormState } from "@/lib/actions/report-actions";
 import { CATEGORIES } from "@/lib/validation";
 
@@ -108,7 +109,7 @@ export function ReportForm() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="dateAndTime">Date and time *</Label>
-              <Input id="dateAndTime" name="dateAndTime" type="datetime-local" />
+              <DatetimePicker name="dateAndTime" id="dateAndTime" />
               {state.fieldErrors?.dateAndTime && (
                 <p className="text-sm text-destructive">
                   {state.fieldErrors.dateAndTime}
