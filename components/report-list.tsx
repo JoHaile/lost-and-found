@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -44,7 +44,9 @@ export function ReportList({ reports }: { reports: ReportCardData[] }) {
                 {report.name}
               </CardTitle>
               <Badge
-                variant={report.reportType === "LOST" ? "destructive" : "secondary"}
+                variant={
+                  report.reportType === "LOST" ? "destructive" : "secondary"
+                }
                 className="shrink-0"
               >
                 {report.reportType}
@@ -75,21 +77,29 @@ export function ReportList({ reports }: { reports: ReportCardData[] }) {
                   <div
                     className={cn(
                       "h-full rounded-full",
-                      report.bestScore >= 75 ? "bg-emerald-500" : "bg-primary/70",
+                      report.bestScore >= 75
+                        ? "bg-emerald-500"
+                        : "bg-primary/70",
                     )}
-                    style={{ width: `${Math.min(100, Math.max(4, report.bestScore))}%` }}
+                    style={{
+                      width: `${Math.min(100, Math.max(4, report.bestScore))}%`,
+                    }}
                   />
                 </div>
               </div>
             )}
           </CardContent>
           <CardFooter>
-            <Link
-              href={`/matches/${report.id}`}
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              View Matches
-            </Link>
+            <Button variant="default" className="w-full">
+              <Link
+                href={`/matches/${report.id}`}
+                className={
+                  "w-full text-center flex justify-center items-center"
+                }
+              >
+                View Matches
+              </Link>
+            </Button>
           </CardFooter>
         </Card>
       ))}

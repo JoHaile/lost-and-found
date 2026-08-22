@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { InboxIcon, SearchXIcon } from "lucide-react";
+import { SearchBar } from "@/components/search-bar";
 import { ReportList, type ReportCardData } from "@/components/report-list";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
 
 export default async function DashboardPage({
@@ -87,19 +87,7 @@ export default async function DashboardPage({
           </Link>
         </div>
 
-        <form action="/" className="mt-8 flex max-w-md gap-2">
-          <Input
-            type="search"
-            name="q"
-            defaultValue={search}
-            placeholder="Search reports by name, description, location…"
-            aria-label="Search reports"
-            className="h-9 rounded-full bg-card pl-4 shadow-sm"
-          />
-          <Button type="submit" variant="outline" className="rounded-full">
-            Search
-          </Button>
-        </form>
+        <SearchBar initialQuery={search} />
       </div>
 
       <section className="mt-10">

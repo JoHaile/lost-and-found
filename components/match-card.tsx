@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckCircle2Icon, CheckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -30,9 +30,14 @@ function formatDate(date: Date): string {
 }
 
 function confidenceTone(score: number): { badge: string; bar: string } {
-  if (score >= 75) return { badge: "bg-emerald-600 text-white", bar: "bg-emerald-500" };
-  if (score >= 50) return { badge: "bg-amber-500 text-white", bar: "bg-amber-500" };
-  return { badge: "bg-muted text-muted-foreground", bar: "bg-muted-foreground/40" };
+  if (score >= 75)
+    return { badge: "bg-emerald-600 text-white", bar: "bg-emerald-500" };
+  if (score >= 50)
+    return { badge: "bg-amber-500 text-white", bar: "bg-amber-500" };
+  return {
+    badge: "bg-muted text-muted-foreground",
+    bar: "bg-muted-foreground/40",
+  };
 }
 
 export function MatchCard({ match }: { match: MatchCardData }) {
@@ -46,7 +51,9 @@ export function MatchCard({ match }: { match: MatchCardData }) {
             {match.counterpartName}
           </CardTitle>
           <Badge
-            variant={match.counterpartType === "LOST" ? "destructive" : "secondary"}
+            variant={
+              match.counterpartType === "LOST" ? "destructive" : "secondary"
+            }
             className="shrink-0"
           >
             {match.counterpartType}
@@ -73,7 +80,10 @@ export function MatchCard({ match }: { match: MatchCardData }) {
           </div>
           <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-muted">
             <div
-              className={cn("h-full rounded-full transition-[width] duration-500", tone.bar)}
+              className={cn(
+                "h-full rounded-full transition-[width] duration-500",
+                tone.bar,
+              )}
               style={{ width: `${Math.min(100, Math.max(4, match.score))}%` }}
             />
           </div>
@@ -83,7 +93,7 @@ export function MatchCard({ match }: { match: MatchCardData }) {
           <ul className="grid gap-1.5">
             {match.reasons.map((reason) => (
               <li key={reason} className="flex items-start gap-2 text-sm">
-                <CheckIcon className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle2Icon className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                 <span>{reason}</span>
               </li>
             ))}
