@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lost & Found Matcher
 
-## Getting Started
+A campus lost-and-found board where anyone can file a **LOST** or **FOUND** report for an item.
+When a report is submitted, the system immediately scans opposite-type reports and surfaces
+**explainable matches**, each with a 0–100 score, a confidence label, and the reasons it matched.
 
-First, run the development server:
+Built as a Software Engineering Assessment: Next.js (App Router) + Server Actions, Prisma 7 on Prisma Postgres,
+Tailwind CSS v4 + shadcn/ui (base-nova / @base-ui/react), and `natural` for lightweight NLP.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+
+# .env in the project root:
+# DATABASE_URL="postgres://..."   (Prisma Postgres connection string)
+
+npx prisma migrate dev      # applies schema
+npx tsx prisma/seed.ts      # optional demo data (5 items -> 2 designed matches)
+
+npm run dev                 # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Approach
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+I built a single vertical slice end to end — schema, matching engine, server action, UI — rather than
+horizontal layers, so the core value (a match with reasons) was provable early and everything else
+serves it. Reads are React Server Components; the one write path is a Server Action consumed via
+`useActionState`, which gives pending state, per-field validation errors, and a success hand-off
+("View matches") without any client data-fetching layer. The matcher is a pure function over two
+items, deliberately separated from persistence (`calculateMatchScore` vs `findAndSaveMatches`), which
+made it testable by inspection and reusable from both the action and the seed script.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How matching works
 
-## Learn More
+1. **Candidate retrieval** — for a new item, fetch opposite-report-type items that are still
+   `PENDING` within a ±30-day date window.
+2. **Weighted score (0–100)** across six signals:
 
-To learn more about Next.js, take a look at the following resources:
+   | Signal      | Weight | Logic                                                                                                                                    |
+   | ----------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+   | Category    | 25     | Exact match = full points; free-text categories fall back to fuzzy similarity (Jaro-Winkler / token overlap ≥ 0.6 → proportional points) |
+   | Name        | 25     | Best of Jaro-Winkler string similarity and stemmed token overlap, scaled                                                                 |
+   | Location    | 20     | String similarity; full points only at ~exact match                                                                                      |
+   | Date        | 15     | Linear decay across the ±30-day window                                                                                                   |
+   | Color       | 10     | String similarity when both are provided                                                                                                 |
+   | Description | 5      | Stemmed keyword overlap (Jaccard)                                                                                                        |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Persistence gate** — pairs scoring ≥ 50 are saved as matches (upsert keyed on the unique
+   lost/found pair, so re-running is idempotent).
+4. **Confidence bands** — ≥ 75 _Strong_, ≥ 50 _Possible_, below stays _Weak_ (not persisted).
+5. **Explainability** — every contributing signal appends a human-readable reason
+   ("Similar category", "Found 2 days after…"), stored as JSON and shown in the UI.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The fuzzy-category fallback exists because "Other…" categories are free text ("small leather goods"
+vs "leather goods") where exact comparison would silently miss obvious pairs.
 
-## Deploy on Vercel
+## Assumptions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Scale & trust**: a single campus/community deployment with modest volume and good-faith users —
+  no auth, pagination, or moderation needed for this scope.
+- **Lifecycle**: reports stay `PENDING`; there is no claim/resolution flow, so items remain matchable.
+- **Free-text fields**: category (incl. custom), color, and location are compared as plain text;
+  no geocoding or controlled vocabularies beyond the fixed category list.
+- **Timing**: losing something and someone finding it typically happens close together; ±30 days is a
+  reasonable retrieval window, and matching runs synchronously at submit time.
+- **One-shot demo**: seed data is illustrative, not representative load.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Major technical decisions
+
+- **Server Actions over API routes** — one mutation, one client; actions keep validation, DB writes,
+  matching, and revalidation co-located with zero client fetching boilerplate.
+- **Prisma 7 with driver adapters** (`@prisma/adapter-pg`) and a singleton client cached on
+  `globalThis` in dev to survive HMR.
+- **zod schema shared by form and action**, mapped to per-field error messages rendered inline.
+- **`natural` instead of embeddings/LLMs** — tokenizer → stopwords → Porter stemming feeds classic
+  similarity metrics: deterministic, dependency-light, explainable, and fast at this scale.
+- **shadcn/ui (base-nova)** components with Inter via `next/font`; the date field is a composed
+  calendar + time picker (react-day-picker in a popover) submitting through a hidden input so the
+  Server Action contract stays plain `FormData`.
+- **Idempotent matching** via upsert on `@@unique([lostItemId, foundItemId])` — safe if triggered again.
+
+## Intentionally not built
+
+- Auth/accounts
+- image uploads
+- notifications (email/push)
+- search filters beyond text query, pagination, admin
+- moderation
+- geocoding/map-based location matching
+- automated test suite
+- i18n internationalization
+
+Each was out of scope for demonstrating the core matching loop well, and each would be the first
+thing added with real users.
+
+## If this were a real product
+
+- **Identity & privacy first** — accounts, ownership of reports, and strict PII handling (found ID
+  cards must never display personal details publicly); publish minimal info, verify claims privately.
+- **Claim verification workflow** — private-key questions ("what stickers are on the case?") before
+  release, plus status transitions (PENDING → CLAIMED → RESOLVED) and audit trail.
+- **Async matching + notifications** — move matching off the request path into a queue, and notify
+  users when a later-submitted report matches theirs (today, only the submitter's item triggers scans).
+- **Better location intelligence** — geocode locations and compare spatially (radius, same building)
+  instead of string similarity.
+- **LLM Embeddings** — Use embeddings for semantic comparison of item names and descriptions to
+  improve match confidence and reduce small semantic mismatches. For example, the system can
+  understand that "earbuds" and "AirPods" may refer to the same type of item, while keeping the
+  existing explainable scoring system.
+- **Feedback loop** — let users mark matches right/wrong, then measure precision per signal weight and
+  tune empirically instead of by intuition.
