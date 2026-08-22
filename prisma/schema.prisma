@@ -1,0 +1,46 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../generated/prisma"
+  runtime             = "nodejs"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Starter models — replace with your own
+
+// model Person {
+//   id        String   @id @default(cuid())
+//   name      String
+//   email     String   @unique
+//   items     Item[]
+//   createdAt DateTime @default(now())
+// }
+
+enum ReportType {
+  LOST
+  FOUND
+}
+
+enum Status {
+  PENDING
+  RESOLVED
+}
+
+model Item {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  location    String
+  category    String?
+  color       String?
+  dateAndTime DateTime
+  reportType  ReportType @default(LOST)
+  status      Status     @default(PENDING)
+  createdAt   DateTime   @default(now())
+
+  @@index([id])
+}
