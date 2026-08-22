@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { InboxIcon, SearchXIcon } from "lucide-react";
+import { CompassIcon, InboxIcon, SearchXIcon } from "lucide-react";
 import { SearchBar } from "@/components/search-bar";
 import { ReportList, type ReportCardData } from "@/components/report-list";
 import { Badge } from "@/components/ui/badge";
@@ -74,7 +74,8 @@ export default async function DashboardPage({
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-xl">
             <h1 className="text-4xl font-semibold tracking-tight text-balance">
-              Lost &amp; Found Matcher
+              <CompassIcon className="mb-1 size-9 inline-block align-middle text-primary" />
+              {" "}Lost &amp; Found Matcher
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground text-pretty">
               Lost something on campus? Found something that is not yours?

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
+import Link from "next/link";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,11 +24,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col">{children}</body>
-    </html>
+    <ThemeProvider>
+      <html
+        lang="en"
+        className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      >
+        <body className="flex min-h-full flex-col">
+          <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
+            <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
+              <Link href="/" className="text-lg font-semibold tracking-tight">
+                Lost &amp; Found
+              </Link>
+              <ThemeToggle />
+            </div>
+          </header>
+          {children}
+        </body>
+      </html>
+    </ThemeProvider>
   );
 }
