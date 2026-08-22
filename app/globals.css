@@ -121,10 +121,40 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    @apply scroll-smooth font-sans;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+  }
   body {
     @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(
+        52rem 26rem at 10% -10rem,
+        oklch(0.62 0.16 265 / 0.09),
+        transparent 65%
+      ),
+      radial-gradient(
+        46rem 24rem at 90% -8rem,
+        oklch(0.72 0.13 185 / 0.08),
+        transparent 65%
+      );
+    background-repeat: no-repeat;
   }
-  html {
-    @apply font-sans;
+  .dark body {
+    background-image:
+      radial-gradient(
+        52rem 26rem at 10% -10rem,
+        oklch(0.62 0.16 265 / 0.14),
+        transparent 65%
+      ),
+      radial-gradient(
+        46rem 24rem at 90% -8rem,
+        oklch(0.72 0.13 185 / 0.1),
+        transparent 65%
+      );
+  }
+  ::selection {
+    @apply bg-primary text-primary-foreground;
   }
 }

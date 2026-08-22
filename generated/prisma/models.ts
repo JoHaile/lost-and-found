@@ -8,6 +8,6 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/Person.ts'
 export type * from './models/Item.ts'
+export type * from './models/Match.ts'
 export type * from './commonInputTypes.ts'

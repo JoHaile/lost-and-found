@@ -29,8 +29,11 @@ export type ItemMinAggregateOutputType = {
   name: string | null
   description: string | null
   location: string | null
-  status: string | null
-  reportedById: string | null
+  category: string | null
+  color: string | null
+  dateAndTime: Date | null
+  reportType: $Enums.ReportType | null
+  status: $Enums.Status | null
   createdAt: Date | null
 }
 
@@ -39,8 +42,11 @@ export type ItemMaxAggregateOutputType = {
   name: string | null
   description: string | null
   location: string | null
-  status: string | null
-  reportedById: string | null
+  category: string | null
+  color: string | null
+  dateAndTime: Date | null
+  reportType: $Enums.ReportType | null
+  status: $Enums.Status | null
   createdAt: Date | null
 }
 
@@ -49,8 +55,11 @@ export type ItemCountAggregateOutputType = {
   name: number
   description: number
   location: number
+  category: number
+  color: number
+  dateAndTime: number
+  reportType: number
   status: number
-  reportedById: number
   createdAt: number
   _all: number
 }
@@ -61,8 +70,11 @@ export type ItemMinAggregateInputType = {
   name?: true
   description?: true
   location?: true
+  category?: true
+  color?: true
+  dateAndTime?: true
+  reportType?: true
   status?: true
-  reportedById?: true
   createdAt?: true
 }
 
@@ -71,8 +83,11 @@ export type ItemMaxAggregateInputType = {
   name?: true
   description?: true
   location?: true
+  category?: true
+  color?: true
+  dateAndTime?: true
+  reportType?: true
   status?: true
-  reportedById?: true
   createdAt?: true
 }
 
@@ -81,8 +96,11 @@ export type ItemCountAggregateInputType = {
   name?: true
   description?: true
   location?: true
+  category?: true
+  color?: true
+  dateAndTime?: true
+  reportType?: true
   status?: true
-  reportedById?: true
   createdAt?: true
   _all?: true
 }
@@ -162,10 +180,13 @@ export type ItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type ItemGroupByOutputType = {
   id: string
   name: string
-  description: string | null
-  location: string | null
-  status: string
-  reportedById: string
+  description: string
+  location: string
+  category: string | null
+  color: string | null
+  dateAndTime: Date
+  reportType: $Enums.ReportType
+  status: $Enums.Status
   createdAt: Date
   _count: ItemCountAggregateOutputType | null
   _min: ItemMinAggregateOutputType | null
@@ -193,23 +214,31 @@ export type ItemWhereInput = {
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   id?: Prisma.StringFilter<"Item"> | string
   name?: Prisma.StringFilter<"Item"> | string
-  description?: Prisma.StringNullableFilter<"Item"> | string | null
-  location?: Prisma.StringNullableFilter<"Item"> | string | null
-  status?: Prisma.StringFilter<"Item"> | string
-  reportedById?: Prisma.StringFilter<"Item"> | string
+  description?: Prisma.StringFilter<"Item"> | string
+  location?: Prisma.StringFilter<"Item"> | string
+  category?: Prisma.StringNullableFilter<"Item"> | string | null
+  color?: Prisma.StringNullableFilter<"Item"> | string | null
+  dateAndTime?: Prisma.DateTimeFilter<"Item"> | Date | string
+  reportType?: Prisma.EnumReportTypeFilter<"Item"> | $Enums.ReportType
+  status?: Prisma.EnumStatusFilter<"Item"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  reportedBy?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  lostMatches?: Prisma.MatchListRelationFilter
+  foundMatches?: Prisma.MatchListRelationFilter
 }
 
 export type ItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
-  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateAndTime?: Prisma.SortOrder
+  reportType?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  reportedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  reportedBy?: Prisma.PersonOrderByWithRelationInput
+  lostMatches?: Prisma.MatchOrderByRelationAggregateInput
+  foundMatches?: Prisma.MatchOrderByRelationAggregateInput
 }
 
 export type ItemWhereUniqueInput = Prisma.AtLeast<{
@@ -218,21 +247,28 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ItemWhereInput[]
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   name?: Prisma.StringFilter<"Item"> | string
-  description?: Prisma.StringNullableFilter<"Item"> | string | null
-  location?: Prisma.StringNullableFilter<"Item"> | string | null
-  status?: Prisma.StringFilter<"Item"> | string
-  reportedById?: Prisma.StringFilter<"Item"> | string
+  description?: Prisma.StringFilter<"Item"> | string
+  location?: Prisma.StringFilter<"Item"> | string
+  category?: Prisma.StringNullableFilter<"Item"> | string | null
+  color?: Prisma.StringNullableFilter<"Item"> | string | null
+  dateAndTime?: Prisma.DateTimeFilter<"Item"> | Date | string
+  reportType?: Prisma.EnumReportTypeFilter<"Item"> | $Enums.ReportType
+  status?: Prisma.EnumStatusFilter<"Item"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  reportedBy?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  lostMatches?: Prisma.MatchListRelationFilter
+  foundMatches?: Prisma.MatchListRelationFilter
 }, "id">
 
 export type ItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
-  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateAndTime?: Prisma.SortOrder
+  reportType?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  reportedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ItemCountOrderByAggregateInput
   _max?: Prisma.ItemMaxOrderByAggregateInput
@@ -245,90 +281,113 @@ export type ItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ItemScalarWhereWithAggregatesInput | Prisma.ItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Item"> | string
   name?: Prisma.StringWithAggregatesFilter<"Item"> | string
-  description?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
-  location?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"Item"> | string
-  reportedById?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  description?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  location?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  category?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  color?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  dateAndTime?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
+  reportType?: Prisma.EnumReportTypeWithAggregatesFilter<"Item"> | $Enums.ReportType
+  status?: Prisma.EnumStatusWithAggregatesFilter<"Item"> | $Enums.Status
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
 }
 
 export type ItemCreateInput = {
   id?: string
   name: string
-  description?: string | null
-  location?: string | null
-  status?: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
   createdAt?: Date | string
-  reportedBy: Prisma.PersonCreateNestedOneWithoutItemsInput
+  lostMatches?: Prisma.MatchCreateNestedManyWithoutLostItemInput
+  foundMatches?: Prisma.MatchCreateNestedManyWithoutFoundItemInput
 }
 
 export type ItemUncheckedCreateInput = {
   id?: string
   name: string
-  description?: string | null
-  location?: string | null
-  status?: string
-  reportedById: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
   createdAt?: Date | string
+  lostMatches?: Prisma.MatchUncheckedCreateNestedManyWithoutLostItemInput
+  foundMatches?: Prisma.MatchUncheckedCreateNestedManyWithoutFoundItemInput
 }
 
 export type ItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  reportedBy?: Prisma.PersonUpdateOneRequiredWithoutItemsNestedInput
+  lostMatches?: Prisma.MatchUpdateManyWithoutLostItemNestedInput
+  foundMatches?: Prisma.MatchUpdateManyWithoutFoundItemNestedInput
 }
 
 export type ItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  reportedById?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lostMatches?: Prisma.MatchUncheckedUpdateManyWithoutLostItemNestedInput
+  foundMatches?: Prisma.MatchUncheckedUpdateManyWithoutFoundItemNestedInput
 }
 
 export type ItemCreateManyInput = {
   id?: string
   name: string
-  description?: string | null
-  location?: string | null
-  status?: string
-  reportedById: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
   createdAt?: Date | string
 }
 
 export type ItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  reportedById?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ItemListRelationFilter = {
-  every?: Prisma.ItemWhereInput
-  some?: Prisma.ItemWhereInput
-  none?: Prisma.ItemWhereInput
-}
-
-export type ItemOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ItemCountOrderByAggregateInput = {
@@ -336,8 +395,11 @@ export type ItemCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  dateAndTime?: Prisma.SortOrder
+  reportType?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  reportedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -346,8 +408,11 @@ export type ItemMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  dateAndTime?: Prisma.SortOrder
+  reportType?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  reportedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -356,150 +421,249 @@ export type ItemMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  dateAndTime?: Prisma.SortOrder
+  reportType?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  reportedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type ItemCreateNestedManyWithoutReportedByInput = {
-  create?: Prisma.XOR<Prisma.ItemCreateWithoutReportedByInput, Prisma.ItemUncheckedCreateWithoutReportedByInput> | Prisma.ItemCreateWithoutReportedByInput[] | Prisma.ItemUncheckedCreateWithoutReportedByInput[]
-  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutReportedByInput | Prisma.ItemCreateOrConnectWithoutReportedByInput[]
-  createMany?: Prisma.ItemCreateManyReportedByInputEnvelope
-  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+export type ItemScalarRelationFilter = {
+  is?: Prisma.ItemWhereInput
+  isNot?: Prisma.ItemWhereInput
 }
 
-export type ItemUncheckedCreateNestedManyWithoutReportedByInput = {
-  create?: Prisma.XOR<Prisma.ItemCreateWithoutReportedByInput, Prisma.ItemUncheckedCreateWithoutReportedByInput> | Prisma.ItemCreateWithoutReportedByInput[] | Prisma.ItemUncheckedCreateWithoutReportedByInput[]
-  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutReportedByInput | Prisma.ItemCreateOrConnectWithoutReportedByInput[]
-  createMany?: Prisma.ItemCreateManyReportedByInputEnvelope
-  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-}
-
-export type ItemUpdateManyWithoutReportedByNestedInput = {
-  create?: Prisma.XOR<Prisma.ItemCreateWithoutReportedByInput, Prisma.ItemUncheckedCreateWithoutReportedByInput> | Prisma.ItemCreateWithoutReportedByInput[] | Prisma.ItemUncheckedCreateWithoutReportedByInput[]
-  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutReportedByInput | Prisma.ItemCreateOrConnectWithoutReportedByInput[]
-  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutReportedByInput | Prisma.ItemUpsertWithWhereUniqueWithoutReportedByInput[]
-  createMany?: Prisma.ItemCreateManyReportedByInputEnvelope
-  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  update?: Prisma.ItemUpdateWithWhereUniqueWithoutReportedByInput | Prisma.ItemUpdateWithWhereUniqueWithoutReportedByInput[]
-  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutReportedByInput | Prisma.ItemUpdateManyWithWhereWithoutReportedByInput[]
-  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
-}
-
-export type ItemUncheckedUpdateManyWithoutReportedByNestedInput = {
-  create?: Prisma.XOR<Prisma.ItemCreateWithoutReportedByInput, Prisma.ItemUncheckedCreateWithoutReportedByInput> | Prisma.ItemCreateWithoutReportedByInput[] | Prisma.ItemUncheckedCreateWithoutReportedByInput[]
-  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutReportedByInput | Prisma.ItemCreateOrConnectWithoutReportedByInput[]
-  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutReportedByInput | Prisma.ItemUpsertWithWhereUniqueWithoutReportedByInput[]
-  createMany?: Prisma.ItemCreateManyReportedByInputEnvelope
-  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
-  update?: Prisma.ItemUpdateWithWhereUniqueWithoutReportedByInput | Prisma.ItemUpdateWithWhereUniqueWithoutReportedByInput[]
-  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutReportedByInput | Prisma.ItemUpdateManyWithWhereWithoutReportedByInput[]
-  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+export type StringFieldUpdateOperationsInput = {
+  set?: string
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type ItemCreateWithoutReportedByInput = {
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type EnumReportTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ReportType
+}
+
+export type EnumStatusFieldUpdateOperationsInput = {
+  set?: $Enums.Status
+}
+
+export type ItemCreateNestedOneWithoutLostMatchesInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLostMatchesInput, Prisma.ItemUncheckedCreateWithoutLostMatchesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLostMatchesInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemCreateNestedOneWithoutFoundMatchesInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutFoundMatchesInput, Prisma.ItemUncheckedCreateWithoutFoundMatchesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutFoundMatchesInput
+  connect?: Prisma.ItemWhereUniqueInput
+}
+
+export type ItemUpdateOneRequiredWithoutLostMatchesNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutLostMatchesInput, Prisma.ItemUncheckedCreateWithoutLostMatchesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutLostMatchesInput
+  upsert?: Prisma.ItemUpsertWithoutLostMatchesInput
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutLostMatchesInput, Prisma.ItemUpdateWithoutLostMatchesInput>, Prisma.ItemUncheckedUpdateWithoutLostMatchesInput>
+}
+
+export type ItemUpdateOneRequiredWithoutFoundMatchesNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutFoundMatchesInput, Prisma.ItemUncheckedCreateWithoutFoundMatchesInput>
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutFoundMatchesInput
+  upsert?: Prisma.ItemUpsertWithoutFoundMatchesInput
+  connect?: Prisma.ItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ItemUpdateToOneWithWhereWithoutFoundMatchesInput, Prisma.ItemUpdateWithoutFoundMatchesInput>, Prisma.ItemUncheckedUpdateWithoutFoundMatchesInput>
+}
+
+export type ItemCreateWithoutLostMatchesInput = {
   id?: string
   name: string
-  description?: string | null
-  location?: string | null
-  status?: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
   createdAt?: Date | string
+  foundMatches?: Prisma.MatchCreateNestedManyWithoutFoundItemInput
 }
 
-export type ItemUncheckedCreateWithoutReportedByInput = {
+export type ItemUncheckedCreateWithoutLostMatchesInput = {
   id?: string
   name: string
-  description?: string | null
-  location?: string | null
-  status?: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
   createdAt?: Date | string
+  foundMatches?: Prisma.MatchUncheckedCreateNestedManyWithoutFoundItemInput
 }
 
-export type ItemCreateOrConnectWithoutReportedByInput = {
+export type ItemCreateOrConnectWithoutLostMatchesInput = {
   where: Prisma.ItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.ItemCreateWithoutReportedByInput, Prisma.ItemUncheckedCreateWithoutReportedByInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutLostMatchesInput, Prisma.ItemUncheckedCreateWithoutLostMatchesInput>
 }
 
-export type ItemCreateManyReportedByInputEnvelope = {
-  data: Prisma.ItemCreateManyReportedByInput | Prisma.ItemCreateManyReportedByInput[]
-  skipDuplicates?: boolean
-}
-
-export type ItemUpsertWithWhereUniqueWithoutReportedByInput = {
-  where: Prisma.ItemWhereUniqueInput
-  update: Prisma.XOR<Prisma.ItemUpdateWithoutReportedByInput, Prisma.ItemUncheckedUpdateWithoutReportedByInput>
-  create: Prisma.XOR<Prisma.ItemCreateWithoutReportedByInput, Prisma.ItemUncheckedCreateWithoutReportedByInput>
-}
-
-export type ItemUpdateWithWhereUniqueWithoutReportedByInput = {
-  where: Prisma.ItemWhereUniqueInput
-  data: Prisma.XOR<Prisma.ItemUpdateWithoutReportedByInput, Prisma.ItemUncheckedUpdateWithoutReportedByInput>
-}
-
-export type ItemUpdateManyWithWhereWithoutReportedByInput = {
-  where: Prisma.ItemScalarWhereInput
-  data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutReportedByInput>
-}
-
-export type ItemScalarWhereInput = {
-  AND?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
-  OR?: Prisma.ItemScalarWhereInput[]
-  NOT?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
-  id?: Prisma.StringFilter<"Item"> | string
-  name?: Prisma.StringFilter<"Item"> | string
-  description?: Prisma.StringNullableFilter<"Item"> | string | null
-  location?: Prisma.StringNullableFilter<"Item"> | string | null
-  status?: Prisma.StringFilter<"Item"> | string
-  reportedById?: Prisma.StringFilter<"Item"> | string
-  createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-}
-
-export type ItemCreateManyReportedByInput = {
+export type ItemCreateWithoutFoundMatchesInput = {
   id?: string
   name: string
-  description?: string | null
-  location?: string | null
-  status?: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
   createdAt?: Date | string
+  lostMatches?: Prisma.MatchCreateNestedManyWithoutLostItemInput
 }
 
-export type ItemUpdateWithoutReportedByInput = {
+export type ItemUncheckedCreateWithoutFoundMatchesInput = {
+  id?: string
+  name: string
+  description: string
+  location: string
+  category?: string | null
+  color?: string | null
+  dateAndTime: Date | string
+  reportType: $Enums.ReportType
+  status?: $Enums.Status
+  createdAt?: Date | string
+  lostMatches?: Prisma.MatchUncheckedCreateNestedManyWithoutLostItemInput
+}
+
+export type ItemCreateOrConnectWithoutFoundMatchesInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutFoundMatchesInput, Prisma.ItemUncheckedCreateWithoutFoundMatchesInput>
+}
+
+export type ItemUpsertWithoutLostMatchesInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutLostMatchesInput, Prisma.ItemUncheckedUpdateWithoutLostMatchesInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutLostMatchesInput, Prisma.ItemUncheckedCreateWithoutLostMatchesInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutLostMatchesInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutLostMatchesInput, Prisma.ItemUncheckedUpdateWithoutLostMatchesInput>
+}
+
+export type ItemUpdateWithoutLostMatchesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  foundMatches?: Prisma.MatchUpdateManyWithoutFoundItemNestedInput
 }
 
-export type ItemUncheckedUpdateWithoutReportedByInput = {
+export type ItemUncheckedUpdateWithoutLostMatchesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  foundMatches?: Prisma.MatchUncheckedUpdateManyWithoutFoundItemNestedInput
 }
 
-export type ItemUncheckedUpdateManyWithoutReportedByInput = {
+export type ItemUpsertWithoutFoundMatchesInput = {
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutFoundMatchesInput, Prisma.ItemUncheckedUpdateWithoutFoundMatchesInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutFoundMatchesInput, Prisma.ItemUncheckedCreateWithoutFoundMatchesInput>
+  where?: Prisma.ItemWhereInput
+}
+
+export type ItemUpdateToOneWithWhereWithoutFoundMatchesInput = {
+  where?: Prisma.ItemWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutFoundMatchesInput, Prisma.ItemUncheckedUpdateWithoutFoundMatchesInput>
+}
+
+export type ItemUpdateWithoutFoundMatchesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lostMatches?: Prisma.MatchUpdateManyWithoutLostItemNestedInput
 }
 
+export type ItemUncheckedUpdateWithoutFoundMatchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateAndTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reportType?: Prisma.EnumReportTypeFieldUpdateOperationsInput | $Enums.ReportType
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lostMatches?: Prisma.MatchUncheckedUpdateManyWithoutLostItemNestedInput
+}
+
+
+/**
+ * Count Type ItemCountOutputType
+ */
+
+export type ItemCountOutputType = {
+  lostMatches: number
+  foundMatches: number
+}
+
+export type ItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  lostMatches?: boolean | ItemCountOutputTypeCountLostMatchesArgs
+  foundMatches?: boolean | ItemCountOutputTypeCountFoundMatchesArgs
+}
+
+/**
+ * ItemCountOutputType without action
+ */
+export type ItemCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemCountOutputType
+   */
+  select?: Prisma.ItemCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ItemCountOutputType without action
+ */
+export type ItemCountOutputTypeCountLostMatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MatchWhereInput
+}
+
+/**
+ * ItemCountOutputType without action
+ */
+export type ItemCountOutputTypeCountFoundMatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MatchWhereInput
+}
 
 
 export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -507,10 +671,15 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   description?: boolean
   location?: boolean
+  category?: boolean
+  color?: boolean
+  dateAndTime?: boolean
+  reportType?: boolean
   status?: boolean
-  reportedById?: boolean
   createdAt?: boolean
-  reportedBy?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  lostMatches?: boolean | Prisma.Item$lostMatchesArgs<ExtArgs>
+  foundMatches?: boolean | Prisma.Item$foundMatchesArgs<ExtArgs>
+  _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -518,10 +687,12 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   description?: boolean
   location?: boolean
+  category?: boolean
+  color?: boolean
+  dateAndTime?: boolean
+  reportType?: boolean
   status?: boolean
-  reportedById?: boolean
   createdAt?: boolean
-  reportedBy?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -529,10 +700,12 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   description?: boolean
   location?: boolean
+  category?: boolean
+  color?: boolean
+  dateAndTime?: boolean
+  reportType?: boolean
   status?: boolean
-  reportedById?: boolean
   createdAt?: boolean
-  reportedBy?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
 export type ItemSelectScalar = {
@@ -540,34 +713,39 @@ export type ItemSelectScalar = {
   name?: boolean
   description?: boolean
   location?: boolean
+  category?: boolean
+  color?: boolean
+  dateAndTime?: boolean
+  reportType?: boolean
   status?: boolean
-  reportedById?: boolean
   createdAt?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "location" | "status" | "reportedById" | "createdAt", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "location" | "category" | "color" | "dateAndTime" | "reportType" | "status" | "createdAt", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  reportedBy?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  lostMatches?: boolean | Prisma.Item$lostMatchesArgs<ExtArgs>
+  foundMatches?: boolean | Prisma.Item$foundMatchesArgs<ExtArgs>
+  _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  reportedBy?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
-}
-export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  reportedBy?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
-}
+export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Item"
   objects: {
-    reportedBy: Prisma.$PersonPayload<ExtArgs>
+    lostMatches: Prisma.$MatchPayload<ExtArgs>[]
+    foundMatches: Prisma.$MatchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
-    description: string | null
-    location: string | null
-    status: string
-    reportedById: string
+    description: string
+    location: string
+    category: string | null
+    color: string | null
+    dateAndTime: Date
+    reportType: $Enums.ReportType
+    status: $Enums.Status
     createdAt: Date
   }, ExtArgs["result"]["item"]>
   composites: {}
@@ -963,7 +1141,8 @@ readonly fields: ItemFieldRefs;
  */
 export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  reportedBy<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  lostMatches<T extends Prisma.Item$lostMatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$lostMatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  foundMatches<T extends Prisma.Item$foundMatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$foundMatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -997,8 +1176,11 @@ export interface ItemFieldRefs {
   readonly name: Prisma.FieldRef<"Item", 'String'>
   readonly description: Prisma.FieldRef<"Item", 'String'>
   readonly location: Prisma.FieldRef<"Item", 'String'>
-  readonly status: Prisma.FieldRef<"Item", 'String'>
-  readonly reportedById: Prisma.FieldRef<"Item", 'String'>
+  readonly category: Prisma.FieldRef<"Item", 'String'>
+  readonly color: Prisma.FieldRef<"Item", 'String'>
+  readonly dateAndTime: Prisma.FieldRef<"Item", 'DateTime'>
+  readonly reportType: Prisma.FieldRef<"Item", 'ReportType'>
+  readonly status: Prisma.FieldRef<"Item", 'Status'>
   readonly createdAt: Prisma.FieldRef<"Item", 'DateTime'>
 }
     
@@ -1254,10 +1436,6 @@ export type ItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.ItemCreateManyInput | Prisma.ItemCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ItemIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1328,10 +1506,6 @@ export type ItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Items to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1398,6 +1572,54 @@ export type ItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Items to delete.
    */
   limit?: number
+}
+
+/**
+ * Item.lostMatches
+ */
+export type Item$lostMatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Match
+   */
+  select?: Prisma.MatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Match
+   */
+  omit?: Prisma.MatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MatchInclude<ExtArgs> | null
+  where?: Prisma.MatchWhereInput
+  orderBy?: Prisma.MatchOrderByWithRelationInput | Prisma.MatchOrderByWithRelationInput[]
+  cursor?: Prisma.MatchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MatchScalarFieldEnum | Prisma.MatchScalarFieldEnum[]
+}
+
+/**
+ * Item.foundMatches
+ */
+export type Item$foundMatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Match
+   */
+  select?: Prisma.MatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Match
+   */
+  omit?: Prisma.MatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MatchInclude<ExtArgs> | null
+  where?: Prisma.MatchWhereInput
+  orderBy?: Prisma.MatchOrderByWithRelationInput | Prisma.MatchOrderByWithRelationInput[]
+  cursor?: Prisma.MatchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MatchScalarFieldEnum | Prisma.MatchScalarFieldEnum[]
 }
 
 /**

@@ -2,9 +2,9 @@ import "dotenv/config";
 import { prisma } from "../lib/prisma";
 
 async function main() {
-  const people = await prisma.person.count();
   const items = await prisma.item.count();
-  console.log(`✅ Connected — people: ${people}, items: ${items}`);
+  const matches = await prisma.match.count();
+  console.log(`✅ Connected — items: ${items}, matches: ${matches}`);
 }
 
 main()

@@ -1,56 +1,82 @@
 import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client";
+import { prisma } from "../lib/prisma";
+import { findAndSaveMatches } from "../lib/matcher";
 
-const pool = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-const prisma = new PrismaClient({ adapter: pool });
+const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
 async function main() {
-  const ada = await prisma.person.upsert({
-    where: { email: "ada@example.com" },
-    update: {},
-    create: { name: "Ada Lovelace", email: "ada@example.com" },
+  await prisma.match.deleteMany();
+  await prisma.item.deleteMany();
+
+  const lostAirpods = await prisma.item.create({
+    data: {
+      name: "Black AirPods Case",
+      description:
+        "Black AirPods Pro charging case with a small scratch on the lid. Lost during an evening study session.",
+      location: "Library",
+      category: "Electronics",
+      color: "Black",
+      dateAndTime: daysAgo(2),
+      reportType: "LOST",
+    },
   });
 
-  const grace = await prisma.person.upsert({
-    where: { email: "grace@example.com" },
-    update: {},
-    create: { name: "Grace Hopper", email: "grace@example.com" },
+  const foundEarbuds = await prisma.item.create({
+    data: {
+      name: "Wireless earbud charging case",
+      description:
+        "Found a dark wireless earbud case on a table near the library entrance. Has a scratch on the lid.",
+      location: "Library entrance",
+      category: "Electronics",
+      color: "Black",
+      dateAndTime: daysAgo(1),
+      reportType: "FOUND",
+    },
   });
 
-  const existing = await prisma.item.count();
-  if (existing === 0) {
-    await prisma.item.createMany({
-      data: [
-        {
-          name: "Blue umbrella",
-          description: "Collapsible umbrella with a wooden handle",
-          location: "Library, 2nd floor",
-          status: "FOUND",
-          reportedById: ada.id,
-        },
-        {
-          name: "Student ID card",
-          description: "Card with a lanyard, name starts with 'M'",
-          location: "Cafeteria",
-          status: "LOST",
-          reportedById: grace.id,
-        },
-        {
-          name: "Water bottle",
-          description: "Green steel bottle with stickers",
-          location: "Gym entrance",
-          status: "LOST",
-          reportedById: ada.id,
-        },
-      ],
-    });
-  }
+  const lostId = await prisma.item.create({
+    data: {
+      name: "Student ID Card",
+      description:
+        "University student ID card on a lanyard. The name starts with M. Last seen at lunch.",
+      location: "Cafeteria",
+      category: "Documents",
+      dateAndTime: daysAgo(3),
+      reportType: "LOST",
+    },
+  });
 
-  const [people, items] = await Promise.all([prisma.person.count(), prisma.item.count()]);
-  console.log(`Seeded ${people} person(s) and ${items} item(s).`);
+  const foundId = await prisma.item.create({
+    data: {
+      name: "University ID card",
+      description:
+        "Found a student ID card on a cafeteria table and handed it to staff at the counter.",
+      location: "Cafeteria",
+      category: "Documents",
+      dateAndTime: daysAgo(1),
+      reportType: "FOUND",
+    },
+  });
+
+  await prisma.item.create({
+    data: {
+      name: "Blue water bottle",
+      description:
+        "Green-blue steel water bottle covered in stickers. Left somewhere near the gym.",
+      location: "Gym",
+      category: "Other",
+      color: "Blue",
+      dateAndTime: daysAgo(1),
+      reportType: "LOST",
+    },
+  });
+
+  await findAndSaveMatches(lostAirpods);
+  await findAndSaveMatches(foundEarbuds);
+  await findAndSaveMatches(lostId);
+  await findAndSaveMatches(foundId);
+
+  console.log(`Seeded ${await prisma.item.count()} items and ${await prisma.match.count()} matches.`);
 }
 
 main()

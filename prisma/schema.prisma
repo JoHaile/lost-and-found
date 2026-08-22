@@ -10,16 +10,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// Starter models — replace with your own
-
-// model Person {
-//   id        String   @id @default(cuid())
-//   name      String
-//   email     String   @unique
-//   items     Item[]
-//   createdAt DateTime @default(now())
-// }
-
 enum ReportType {
   LOST
   FOUND
@@ -38,9 +28,36 @@ model Item {
   category    String?
   color       String?
   dateAndTime DateTime
-  reportType  ReportType @default(LOST)
+  reportType  ReportType
   status      Status     @default(PENDING)
   createdAt   DateTime   @default(now())
 
-  @@index([id])
+  lostMatches  Match[] @relation("LostItemMatches")
+  foundMatches Match[] @relation("FoundItemMatches")
+
+  @@index([reportType])
+  @@index([category])
+  @@index([status])
+  @@index([dateAndTime])
+}
+
+model Match {
+  id          String   @id @default(cuid())
+
+  lostItemId  String
+  foundItemId String
+
+  score       Float
+  confidence  String
+  reasons     Json?
+
+  createdAt   DateTime @default(now())
+
+  lostItem    Item @relation("LostItemMatches", fields: [lostItemId], references: [id], onDelete: Cascade)
+  foundItem   Item @relation("FoundItemMatches", fields: [foundItemId], references: [id], onDelete: Cascade)
+
+  @@unique([lostItemId, foundItemId])
+  @@index([lostItemId])
+  @@index([foundItemId])
+  @@index([score])
 }
