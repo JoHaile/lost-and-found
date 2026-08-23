@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftCircleIcon } from "lucide-react";
 
 export default async function MatchesPage({
   params,
@@ -30,8 +32,14 @@ export default async function MatchesPage({
 
   const matchRows =
     item.reportType === "LOST"
-      ? item.lostMatches.map((match) => ({ match, counterpart: match.foundItem }))
-      : item.foundMatches.map((match) => ({ match, counterpart: match.lostItem }));
+      ? item.lostMatches.map((match) => ({
+          match,
+          counterpart: match.foundItem,
+        }))
+      : item.foundMatches.map((match) => ({
+          match,
+          counterpart: match.lostItem,
+        }));
 
   const matches: MatchCardData[] = matchRows.map(({ match, counterpart }) => ({
     id: match.id,
@@ -48,9 +56,12 @@ export default async function MatchesPage({
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-10">
       <p className="mb-6">
-        <Link href="/" className="text-sm underline underline-offset-4">
-          ← Back to dashboard
-        </Link>
+        <Button variant="default" className="cursor-pointer">
+          <Link href="/" className="flex items-center gap-3">
+            <ArrowLeftCircleIcon className="h-4 w-4" />
+            Back to dashboard
+          </Link>
+        </Button>
       </p>
 
       <Card>
@@ -62,7 +73,9 @@ export default async function MatchesPage({
               </CardDescription>
               <CardTitle className="mt-1 text-xl">{item.name}</CardTitle>
             </div>
-            <Badge variant={item.reportType === "LOST" ? "destructive" : "secondary"}>
+            <Badge
+              variant={item.reportType === "LOST" ? "destructive" : "secondary"}
+            >
               {item.reportType}
             </Badge>
           </div>
