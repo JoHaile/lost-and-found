@@ -44,3 +44,37 @@ export function tokenOverlap(a: string, b: string): number {
   }
   return shared / (tokensA.size + tokensB.size - shared);
 }
+
+const COLOR_WORDS = new Set([
+  "black", "white", "red", "green", "blue", "yellow", "orange", "purple",
+  "pink", "brown", "gray", "grey", "silver", "gold", "golden", "navy",
+  "beige", "tan", "maroon", "teal", "violet", "cream", "olive", "turquoise",
+  "magenta", "indigo", "lavender", "crimson", "scarlet",
+]);
+
+function words(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[^a-z]+/)
+    .filter(Boolean);
+}
+
+export function stripColorWords(text: string, extra?: string): string {
+  const extraWords = new Set(words(extra ?? ""));
+  return words(text)
+    .filter((word) => !COLOR_WORDS.has(word) && !extraWords.has(word))
+    .join(" ");
+}
+
+export function extractItemName(
+  name: string,
+  otherFields: Array<string | null | undefined> = [],
+): string {
+  const removal = new Set(COLOR_WORDS);
+  for (const source of otherFields) {
+    for (const word of words(source ?? "")) removal.add(word);
+  }
+  return words(name)
+    .filter((word) => !removal.has(word))
+    .join(" ");
+}

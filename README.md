@@ -40,7 +40,7 @@ made it testable by inspection and reusable from both the action and the seed sc
    | Signal      | Weight | Logic                                                                                                                                    |
    | ----------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
    | Category    | 25     | Exact match = full points; free-text categories fall back to fuzzy similarity (Jaro-Winkler / token overlap ≥ 0.6 → proportional points) |
-   | Name        | 25     | Best of Jaro-Winkler string similarity and stemmed token overlap, scaled                                                                 |
+   | Name      | 25     | Best of Jaro-Winkler and stemmed token overlap, computed on names stripped of color and location words so those signals can't inflate the name score (each is compared only in its own field) |
    | Location    | 20     | String similarity; full points only at ~exact match                                                                                      |
    | Date        | 15     | Linear decay across the ±30-day window                                                                                                   |
    | Color       | 10     | String similarity when both are provided                                                                                                 |

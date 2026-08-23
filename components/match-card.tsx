@@ -1,4 +1,4 @@
-import { CheckCircle2Icon } from "lucide-react";
+import { CalendarIcon, CheckCircle2Icon, MapPinHouseIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -63,8 +63,18 @@ export function MatchCard({ match }: { match: MatchCardData }) {
             {match.counterpartType}
           </Badge>
         </div>
-        <CardDescription>
-          {match.counterpartLocation} • {formatDate(match.counterpartDate)}
+        <CardDescription className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>
+            <MapPinHouseIcon className="mr-1 inline-block size-3.5" />{" "}
+            {match.counterpartLocation}
+          </span>
+
+          <span className="text-muted-foreground/60">•</span>
+
+          <span>
+            <CalendarIcon className="mr-1 inline-block size-3.5" />{" "}
+            {formatDate(match.counterpartDate)}
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -95,6 +105,7 @@ export function MatchCard({ match }: { match: MatchCardData }) {
 
         {match.reasons.length > 0 && (
           <ul className="grid gap-1.5">
+            <p className="text-sm font-medium mb-2">Reasons for this match</p>
             {match.reasons.map((reason) => (
               <li key={reason} className="flex items-start gap-2 text-sm">
                 <CheckCircle2Icon className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />

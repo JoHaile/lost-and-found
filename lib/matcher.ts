@@ -1,6 +1,6 @@
 import type { Item } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { textSimilarity, tokenOverlap } from "@/lib/nlp";
+import { extractItemName, textSimilarity, tokenOverlap } from "@/lib/nlp";
 
 const WEIGHTS = {
   category: 25,
@@ -42,9 +42,16 @@ function calculateCategoryScore(lost: Item, found: Item): ScorePart {
 }
 
 function calculateNameScore(lost: Item, found: Item): ScorePart {
+  let lostName = extractItemName(lost.name, [lost.color, lost.location]);
+  let foundName = extractItemName(found.name, [found.color, found.location]);
+  if (!lostName || !foundName) {
+    lostName = lost.name;
+    foundName = found.name;
+  }
+
   const similarity = Math.max(
-    textSimilarity(lost.name, found.name),
-    tokenOverlap(lost.name, found.name),
+    textSimilarity(lostName, foundName),
+    tokenOverlap(lostName, foundName),
   );
   if (similarity < 0.6) return { points: 0 };
   return {

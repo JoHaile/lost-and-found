@@ -58,6 +58,8 @@ Module-level setup: a `WordTokenizer`, the `PorterStemmer`, and a small English 
 | `tokenize` | `(text: string) => string[]` | Lowercases, splits into words, drops stop words and single characters, then Porter-stems each token ("running" → "run"). Feeds all token-based comparisons. |
 | `textSimilarity` | `(a: string, b: string) => number` | Jaro-Winkler similarity of two trimmed/lowercased strings. Returns 0–1; 1 = identical. Rewards strings that share a common prefix (good for typos and close spellings). |
 | `tokenOverlap` | `(a: string, b: string) => number` | Jaccard overlap of the *stemmed token sets* of two texts: shared / union. Returns 0–1; order-independent, so "black case wireless" ≈ "wireless black case". |
+| `stripColorWords` | `(text: string, extra?: string) => string` | Removes color words from a text ("Black backpack" → "backpack"): built-in English color lexicon **plus** any word found in `extra`. |
+| `extractItemName` | `(name: string, otherFields?) => string` | What name matching actually uses: strips color lexicon words **and** every word appearing in the given fields (the item's own `color` and `location`), so names compare on item nouns only and color/location can't double-count inside the name signal. |
 
 These three are the only text math in the app — both the name/color/category scores and the
 description keyword score are built from them.
@@ -87,7 +89,7 @@ description keyword score are built from them.
 | Scorer | Logic |
 |---|---|
 | `calculateCategoryScore` | Exact match (case-insensitive) = full 25 pts, reason *"Same category"*. Otherwise falls back to fuzzy comparison of the raw category strings (`max(textSimilarity, tokenOverlap)` ≥ 0.6) for proportional points — reason *"Similar category"*. This is what lets free-text "Other…" categories like "small leather goods" match "leather goods". Unrelated categories score 0. |
-| `calculateNameScore` | `max(textSimilarity, tokenOverlap)` of item names; below 0.6 → 0, else proportional points, reason *"Similar item name"*. |
+| `calculateNameScore` | `max(textSimilarity, tokenOverlap)` of **color- and location-stripped** names (`extractItemName` removes lexicon colors plus the item's own color/location words first; if stripping empties a side, the original names are used). Below 0.6 → 0, else proportional points, reason *"Similar item name"*. Color and location therefore never double-count here — each is scored only by its own signal. |
 | `calculateLocationScore` | Jaro-Winkler on locations. ≥0.8 earns proportional points (*"Similar location"*); only an exact match gets full points (*"Same location"*). |
 | `calculateDateScore` | Linear decay across the ±30-day window (`weight × (1 − gapDays/30)`). Reason always explains the gap direction: *"Found on the same or next day"*, *"Found N days after/before…"*. |
 | `calculateColorScore` | If both colors exist and similarity ≥ 0.75, proportional points — *"Same color"* / *"Similar color"*. Missing color on either side scores 0 without penalty elsewhere. |
