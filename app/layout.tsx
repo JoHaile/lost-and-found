@@ -24,23 +24,27 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <ThemeProvider>
-      <html
-        lang="en"
-        className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
-      >
-        <body className="flex min-h-full flex-col">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <head>
+        <script />
+      </head>
+      <body className="flex min-h-full flex-col">
+        <ThemeProvider>
           <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
             <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
               <Link href="/" className="text-lg font-semibold tracking-tight">
-                Lost &amp; Found
+                Lost & Found
               </Link>
               <ThemeToggle />
             </div>
           </header>
           {children}
-        </body>
-      </html>
-    </ThemeProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

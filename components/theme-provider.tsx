@@ -4,6 +4,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark" | "system";
 
+declare global {
+  interface Window {
+    __INITIAL_THEME?: Theme;
+  }
+}
+
 const ThemeContext = createContext<{
   theme: Theme;
   setTheme: (theme: Theme) => void;
@@ -15,7 +21,7 @@ const ThemeContext = createContext<{
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return "system";
-    return (localStorage.getItem("theme") as Theme | null) ?? "system";
+    return window.__INITIAL_THEME || "system";
   });
 
   useEffect(() => {

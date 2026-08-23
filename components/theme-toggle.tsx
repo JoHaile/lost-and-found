@@ -21,7 +21,11 @@ export function ThemeToggle() {
 
   return (
     <Popover>
-      <PopoverTrigger className="size-8 rounded-full hover:bg-muted">
+      <PopoverTrigger
+        render={<div />}
+        nativeButton={false}
+        className="size-8 rounded-full hover:bg-muted flex items-center justify-center cursor-pointer select-none"
+      >
         <Icon className="size-4" />
         <span className="sr-only">Toggle theme</span>
       </PopoverTrigger>
