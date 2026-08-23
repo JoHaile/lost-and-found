@@ -33,7 +33,11 @@ function confidenceTone(score: number): { badge: string; bar: string } {
   if (score >= 75)
     return { badge: "bg-emerald-600 text-white", bar: "bg-emerald-500" };
   if (score >= 50)
-    return { badge: "bg-amber-500 text-white", bar: "bg-amber-500" };
+    return {
+      badge:
+        "bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400",
+      bar: "bg-amber-500",
+    };
   return {
     badge: "bg-muted text-muted-foreground",
     bar: "bg-muted-foreground/40",
@@ -52,7 +56,7 @@ export function MatchCard({ match }: { match: MatchCardData }) {
           </CardTitle>
           <Badge
             variant={
-              match.counterpartType === "LOST" ? "destructive" : "secondary"
+              match.counterpartType === "LOST" ? "destructive" : "success"
             }
             className="shrink-0"
           >

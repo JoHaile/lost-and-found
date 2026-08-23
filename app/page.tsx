@@ -80,7 +80,7 @@ export default async function DashboardPage({
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="flex flex-wrap gap-2">
           <Badge variant="destructive">{lostCount} lost</Badge>
-          <Badge variant="secondary">{foundCount} found</Badge>
+          <Badge variant="success">{foundCount} found</Badge>
           <Badge variant="outline">{matchCount} matches</Badge>
         </div>
 
