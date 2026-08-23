@@ -46,7 +46,7 @@ export function ReportList({ reports }: { reports: ReportCardData[] }) {
               </CardTitle>
               <Badge
                 variant={
-                  report.reportType === "LOST" ? "destructive" : "secondary"
+                  report.reportType === "LOST" ? "destructive" : "success"
                 }
                 className="shrink-0"
               >
@@ -86,7 +86,18 @@ export function ReportList({ reports }: { reports: ReportCardData[] }) {
                     {Math.round(report.bestScore)}%
                   </span>
                   {report.bestConfidence && (
-                    <Badge variant="outline">{report.bestConfidence}</Badge>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        report.bestScore >= 75 &&
+                          "border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
+                        report.bestScore < 75 &&
+                          report.bestScore >= 50 &&
+                          "border-amber-500/30 text-amber-700 dark:text-amber-400",
+                      )}
+                    >
+                      {report.bestConfidence}
+                    </Badge>
                   )}
                 </div>
                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-muted">
@@ -95,7 +106,9 @@ export function ReportList({ reports }: { reports: ReportCardData[] }) {
                       "h-full rounded-full",
                       report.bestScore >= 75
                         ? "bg-emerald-500"
-                        : "bg-primary/70",
+                        : report.bestScore >= 50
+                          ? "bg-amber-500"
+                          : "bg-primary/60",
                     )}
                     style={{
                       width: `${Math.min(100, Math.max(4, report.bestScore))}%`,

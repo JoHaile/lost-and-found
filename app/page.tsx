@@ -11,14 +11,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
+import { SORT_OPTIONS, type SortKey } from "@/lib/sort";
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; sort?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, sort: sortParam } = await searchParams;
   const search = q?.trim();
+  const sort: SortKey = SORT_OPTIONS.some((option) => option.value === sortParam)
+    ? (sortParam as SortKey)
+    : "newest";
 
   const [items, lostCount, foundCount, matchCount] = await Promise.all([
     prisma.item.findMany({
@@ -33,7 +37,12 @@ export default async function DashboardPage({
             ],
           }
         : undefined,
-      orderBy: { createdAt: "desc" },
+      orderBy:
+        sort === "oldest"
+          ? { createdAt: "asc" }
+          : sort === "name"
+            ? { name: "asc" }
+            : { createdAt: "desc" },
       take: 24,
       include: { lostMatches: true, foundMatches: true },
     }),
@@ -62,12 +71,16 @@ export default async function DashboardPage({
     };
   });
 
+  if (sort === "match") {
+    reports.sort((a, b) => (b.bestScore ?? -1) - (a.bestScore ?? -1));
+  }
+
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12">
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="flex flex-wrap gap-2">
           <Badge variant="destructive">{lostCount} lost</Badge>
-          <Badge variant="secondary">{foundCount} found</Badge>
+          <Badge variant="success">{foundCount} found</Badge>
           <Badge variant="outline">{matchCount} matches</Badge>
         </div>
 
@@ -88,7 +101,7 @@ export default async function DashboardPage({
           </Link>
         </div>
 
-        <SearchBar initialQuery={search} />
+        <SearchBar initialQuery={search} initialSort={sort} />
       </div>
 
       <section className="mt-10">

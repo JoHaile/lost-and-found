@@ -16,7 +16,7 @@ npm install
 # DATABASE_URL="postgres://..."   (Prisma Postgres connection string)
 
 npx prisma migrate dev      # applies schema
-npx tsx prisma/seed.ts      # optional demo data (5 items -> 2 designed matches)
+npx tsx prisma/seed.ts      # optional demo data (8 items -> 4 designed match pairs)
 
 npm run dev                 # http://localhost:3000
 ```
@@ -37,14 +37,14 @@ made it testable by inspection and reusable from both the action and the seed sc
    `PENDING` within a ±30-day date window.
 2. **Weighted score (0–100)** across six signals:
 
-   | Signal      | Weight | Logic                                                                                                                                    |
-   | ----------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-   | Category    | 25     | Exact match = full points; free-text categories fall back to fuzzy similarity (Jaro-Winkler / token overlap ≥ 0.6 → proportional points) |
-   | Name        | 25     | Best of Jaro-Winkler string similarity and stemmed token overlap, scaled                                                                 |
-   | Location    | 20     | String similarity; full points only at ~exact match                                                                                      |
-   | Date        | 15     | Linear decay across the ±30-day window                                                                                                   |
-   | Color       | 10     | String similarity when both are provided                                                                                                 |
-   | Description | 5      | Stemmed keyword overlap (Jaccard)                                                                                                        |
+   | Signal      | Weight | Logic                                                                                                                                                                                         |
+   | ----------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Category    | 25     | Exact match = full points; free-text categories fall back to fuzzy similarity (Jaro-Winkler / token overlap ≥ 0.6 → proportional points)                                                      |
+   | Name        | 25     | Best of Jaro-Winkler and stemmed token overlap, computed on names stripped of color and location words so those signals can't inflate the name score (each is compared only in its own field) |
+   | Location    | 20     | String similarity; full points only at ~exact match                                                                                                                                           |
+   | Date        | 15     | Linear decay across the ±30-day window                                                                                                                                                        |
+   | Color       | 10     | String similarity when both are provided                                                                                                                                                      |
+   | Description | 5      | Stemmed keyword overlap (Jaccard)                                                                                                                                                             |
 
 3. **Persistence gate** — pairs scoring ≥ 50 are saved as matches (upsert keyed on the unique
    lost/found pair, so re-running is idempotent).
@@ -104,9 +104,6 @@ thing added with real users.
   users when a later-submitted report matches theirs (today, only the submitter's item triggers scans).
 - **Better location intelligence** — geocode locations and compare spatially (radius, same building)
   instead of string similarity.
-- **LLM Embeddings** — Use embeddings for semantic comparison of item names and descriptions to
-  improve match confidence and reduce small semantic mismatches. For example, the system can
-  understand that "earbuds" and "AirPods" may refer to the same type of item, while keeping the
-  existing explainable scoring system.
+- **AI-Powered Confidence Scores**: Uses an embedded LLM to evaluate descriptions and generate a smarter match probability. This eliminates minor semantic errors because the LLM easily parses context and synonyms (e.g., "earbuds" ↔ "AirPods"), maintaining our structured, explainable matching interface.
 - **Feedback loop** — let users mark matches right/wrong, then measure precision per signal weight and
   tune empirically instead of by intuition.

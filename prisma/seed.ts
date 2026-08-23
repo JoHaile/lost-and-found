@@ -58,16 +58,55 @@ async function main() {
     },
   });
 
-  await prisma.item.create({
+  const lostBottle = await prisma.item.create({
     data: {
       name: "Blue water bottle",
       description:
         "Green-blue steel water bottle covered in stickers. Left somewhere near the gym.",
       location: "Gym",
-      category: "Other",
+      category: "Water bottles",
       color: "Blue",
       dateAndTime: daysAgo(1),
       reportType: "LOST",
+    },
+  });
+
+  const lostBackpack = await prisma.item.create({
+    data: {
+      name: "Black backpack near the fountain",
+      description:
+        "Black campus backpack with a broken zipper pull. Has a chemistry textbook inside.",
+      location: "Main fountain",
+      category: "Bags",
+      color: "Black",
+      dateAndTime: daysAgo(4),
+      reportType: "LOST",
+    },
+  });
+
+  await prisma.item.create({
+    data: {
+      name: "Backpack with sketchbooks",
+      description:
+        "Found a black backpack with two sketchbooks inside by the fountain walkway.",
+      location: "Fountain walkway",
+      category: "Bags",
+      color: "Black",
+      dateAndTime: daysAgo(2),
+      reportType: "FOUND",
+    },
+  });
+
+  const foundBottle = await prisma.item.create({
+    data: {
+      name: "Steel bottle",
+      description:
+        "Found a blue insulated steel bottle covered in stickers next to the gym entrance benches.",
+      location: "Gym",
+      category: "Bottle",
+      color: "Blue",
+      dateAndTime: daysAgo(1),
+      reportType: "FOUND",
     },
   });
 
@@ -75,6 +114,9 @@ async function main() {
   await findAndSaveMatches(foundEarbuds);
   await findAndSaveMatches(lostId);
   await findAndSaveMatches(foundId);
+  await findAndSaveMatches(lostBackpack);
+  await findAndSaveMatches(lostBottle);
+  await findAndSaveMatches(foundBottle);
 
   console.log(`Seeded ${await prisma.item.count()} items and ${await prisma.match.count()} matches.`);
 }
