@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { CalendarIcon, MapPinIcon, TagIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -52,12 +53,27 @@ export function ReportList({ reports }: { reports: ReportCardData[] }) {
                 {report.reportType}
               </Badge>
             </div>
-            <CardDescription>
-              {[report.category, report.location].filter(Boolean).join(" • ")}
+            <CardDescription className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              {report.category && (
+                <span className="inline-flex items-center gap-1.5">
+                  <TagIcon className="size-3.5 text-muted-foreground" />
+                  {report.category}
+                </span>
+              )}
+              {report.category && report.location && (
+                <span className="text-muted-foreground/60">•</span>
+              )}
+              {report.location && (
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPinIcon className="size-3.5 text-muted-foreground" />
+                  {report.location}
+                </span>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1">
-            <p className="text-sm text-muted-foreground">
+            <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <CalendarIcon className="size-3.5" />
               {formatDate(report.dateAndTime)}
             </p>
             {report.bestScore !== null && (

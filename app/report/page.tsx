@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FilePlusIcon } from "lucide-react";
 import { ReportForm } from "@/components/report-form";
 
 export default function ReportPage() {
@@ -6,7 +7,8 @@ export default function ReportPage() {
     <main className="mx-auto w-full max-w-xl px-4 py-10">
       <div className="mb-6">
         <h1 className="text-4xl font-semibold tracking-tight text-balance">
-          Report an Item
+          <FilePlusIcon className="mb-1 size-9 inline-block align-middle text-primary" />
+          {" "}Report an Item
         </h1>
         <p className="mt-3 text-base leading-relaxed text-muted-foreground text-pretty">
           Choose whether you lost something or found something, then describe
