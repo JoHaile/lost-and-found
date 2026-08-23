@@ -52,6 +52,14 @@ const COLOR_WORDS = new Set([
   "magenta", "indigo", "lavender", "crimson", "scarlet",
 ]);
 
+const FILLER_WORDS = new Set([
+  "a", "an", "the", "my", "our", "his", "her", "its", "it",
+  "at", "in", "on", "of", "to", "and", "or", "near", "beside", "next",
+  "by", "with", "from", "inside", "outside", "under", "behind", "front",
+  "around", "along", "between", "against", "across", "toward", "towards",
+  "lost", "found", "missing", "somewhere", "here", "there",
+]);
+
 function words(text: string): string[] {
   return text
     .toLowerCase()
@@ -70,7 +78,7 @@ export function extractItemName(
   name: string,
   otherFields: Array<string | null | undefined> = [],
 ): string {
-  const removal = new Set(COLOR_WORDS);
+  const removal = new Set([...COLOR_WORDS, ...FILLER_WORDS]);
   for (const source of otherFields) {
     for (const word of words(source ?? "")) removal.add(word);
   }
