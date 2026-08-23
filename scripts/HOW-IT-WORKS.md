@@ -136,4 +136,4 @@ so validation copy lives in exactly one place.
 | `app/page.tsx` | Dashboard: stat chips, search (via `components/search-bar.tsx`), recent reports grid |
 | `app/report/page.tsx` + `components/report-form.tsx` | Submission form; hybrid category select where "Other…" reveals a custom-text input; date/time chosen with `components/datetime-picker.tsx` |
 | `app/matches/[id]/page.tsx` | Ranked matches for any item, looked up in both directions (lost→found and found→lost) |
-| `prisma/seed.ts` | Demo data pushed through the real `findAndSaveMatches` |
+| `prisma/seed.ts` | Demo data pushed through the real `findAndSaveMatches` — 8 items forming 4 designed pairs (AirPods, ID card, color-in-name backpack, custom-category water bottle), each exercising a different matcher signal |
